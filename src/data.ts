@@ -65,10 +65,16 @@ export const experienceList: ExperienceItem[] = [
     company: 'BlueTech Solutions (Vendor of Robi Axiata Limited)',
     duration: 'Jan 2026 – Current',
     details: [
-      'Lead and coordinate end-to-end quality assurance cycles for primary digital solutions utilized by Robi Axiata Limited, a premier telecom operator.',
-      'Design, program, and maintain automated regression suites using Cypress and Playwright scripts, decreasing regression test time by 40%.',
-      'Create extensive API verification matrices utilizing Insomnia, validating webhooks, session handling, and telecom-grade transactions.',
-      'Document rigorous test plans and bug reports, coordinating directly with engineering departments in fast-paced Agile sprint schedules.'
+      'Developed and Implemented Software Test Plans and Strategies.',
+      'Executed Manual Testing on Web Applications and Mobile Applications.',
+      'Identified, Documented, and Tracked Software Defects.',
+      'Writing the Test Cases and Bug Reports.',
+      'Functionality Testing and Requirement Analysis of the Product.',
+      'Collaborate with UI/UX, Developer, Business Team, and Project Manager to Work as a Team.',
+      'Integration, Regression, Ad-hoc, and Exploratory Testing as a Part of Software.',
+      'Worked closely with Robi Axiata Ltd. to Test and Ensure the Quality of Digital Products such as BDTickets, Performing Functional and Regression Testing Across Platforms.',
+      'Actively Participated in Agile Sprint Meetings, Clearly Communicating Testing Status, Defects, and Quality Risks with Cross-Functional Teams.',
+      'Participate Automation Testing: Cypress, Playwright, K6 - Load Testing, and Insomnia - API Testing.'
     ],
     isCurrent: true
   },
@@ -78,10 +84,15 @@ export const experienceList: ExperienceItem[] = [
     company: 'Gain Solution Ltd.',
     duration: 'Feb 2024 – Jan 2026',
     details: [
-      'Engineered complete QA strategies for major SaaS portals, including EasyDesk ticket manager and Gain.io analytical platform.',
-      'Formulated, maintained, and carried out thousands of functional test cases, usability reviews, and security compliance matrices.',
-      'Established target benchmark benchmarks on web databases using continuous load/stress scenarios with K6 tests.',
-      'Triaged software release flows, reporting precise tickets in JIRA & ClickUp, ensuring zero critical leaks hit live production.'
+      'Developed and Implemented Software Test Plans and Strategies.',
+      'Executed Manual Testing on Web Applications and  Mobile Applications.',
+      'Identified, Documented, and Tracked Software Defects.',
+      'Writing the Test Cases and Bug Reports.',
+      'Functionality Testing and Requirement Analysis of the Product.',
+      'Collaborate with UI/UX, Developer, Business Team, and Project Manager to Work as a Team.',
+      'Integration, Regression, Ad-hoc, and Exploratory Testing as a Part of Software.',
+      'QA and Test Complex Application Financial Scenarios, Payment Features, Data Import, Permission Protocols, Payroll, AI Features, and Report Generate Issues.',
+      'Automation Testing: Cypress, Playwright (Test Script Writing).'
     ]
   },
   {
@@ -90,8 +101,14 @@ export const experienceList: ExperienceItem[] = [
     company: 'Fresh Pack Industries',
     duration: 'Jun 2025 – Dec 2025',
     details: [
-      'Advised management on technical operational standards, digital tracking transition, and high-fidelity project delivery.',
-      'Supervised custom ERP software implementation, executing user acceptance testing (UAT) and bridging administrative business goals with external coders.'
+      'Analyzed existing workflows and recommended technical solutions to improve organizational efficiency and collaboration.',
+      'Introduced and implemented Slack to streamline internal communication and reduce dependency on informal messaging channels.',
+      'Implemented Trello for task tracking and project management, enabling better visibility of work progress and accountability.',
+      'Introduced TimeCamp to monitor time utilization, improve productivity, and support data-driven decision-making.',
+      'Guided team members on best practices for using collaboration and productivity tools effectively.',
+      'Participated in client meetings to support product purchasing decisions and provide consultation on website updates and improvements.',
+      'Acted as a bridge between business requirements and technical solutions to enhance the overall work environment.',
+      'Provided strategic recommendations to modernize operational processes through digital tools.'
     ]
   },
   {
@@ -100,19 +117,46 @@ export const experienceList: ExperienceItem[] = [
     company: 'Quantanite',
     duration: 'Jul 2019 – Feb 2024',
     details: [
-      'Oversaw technical QA processes, performed compliance checks, and governed complex data validation pipelines.',
-      'Coached and guided junior associates in quality matrices, consistently surpassing operational accuracy bar (99.8%).',
-      'Honored and promoted multiple times due to outstanding delivery ownership and troubleshooting initiatives.'
+      'Assisting with the Business Case.',
+      'Planning and Monitoring.',
+      'Eliciting Requirements.',
+      'Translating and Simplifying Requirements.',
+      'Requirements Management and Communication.',
+      'Requirements Analysis.',
+      'Written and Verbal Communication, Including Technical Writing Skills.',
+      'Understanding of Systems Engineering Concepts.',
+      'The Ability to Conduct Cost/Benefit Analysis.',
+      'Business Case Development.',
+      'Modeling Techniques and Methods.',
+      'Leadership.',
+      'Implement Advanced Strategies for Gathering, Reviewing, and Analyzing Data Requirements.',
+      'Prioritize Requirements and Create Conceptual Prototypes and Mock-Ups.',
+      'Master Strategic Business Process Modeling, Tractability, and Quality Management Techniques.',
+      'Apply Best Practices for Effective Communication and Problem-Solving.',
+      'Successfully Compete for the Most Sought-After Business Analyst Jobs.',
+      'Data Processing.',
+      'Delivering High-Quality Data Science Models as Part of a Team Working on a Variety of Forecasting, Optimization, Logistical, and Routing Challenges as a Part of an Established Team of Data Scientists with Experience in These Areas.',
+      'Work Closely with Team Members Across All Business Units to Build and Evaluate Suitable Algorithms to Allow Us to Scale Our Business.',
+      'Interfacing with Other Tech Teams Working to Production Deadlines.',
+      'Taking On Board Feedback from Other Data Scientists, Gathering Reviews of Code and Models, and Ensuring They Can be Effectively Deployed by the Tech Team.',
+      'Use Data to Visualize and Explain Hypotheses and Models.',
+      'To Simply Execute Email Marketing of the Dedicated Clients for Promoting Their Products or Services and Developing a Professional Relationship with Potential Leads or Customers That will Accelerate the Growth of Their Organization to Fulfill Their Marketing Goals. Finding Valid Mail Addresses for the Clients and Arranging the Data with Proper Quality Assurance.'
     ]
   },
   {
     id: 'exp-5',
-    role: 'Quality Assurance Associate Custom',
+    role: 'IT Specialist',
     company: 'Fresh Pack Industries',
     duration: 'Mar 2017 – Jun 2018',
     details: [
-      'Maintained system checks, optimized process flows, and implemented operational testing protocols on internal systems.',
-      'Created standardized documentation matrices in line with strict compliance benchmarks.'
+      'Installing and Configuring Computer Hardware, Software, Networks, Printers, and Scanners.',
+      'Monitoring and Maintaining Computer Systems and Networks.',
+      'Responding in a Timely Manner to Service Issues and Requests.',
+      'Providing Technical Support Across the Company (This May be in Person or Over the Phone).',
+      'Setting Up Accounts for New Users.',
+      'Repairing and Replacing Equipment as Necessary.',
+      'Testing New Technology.',
+      'Possibly Training More Junior Staff Members.'
     ]
   },
   {
@@ -121,8 +165,9 @@ export const experienceList: ExperienceItem[] = [
     company: 'Grameenphone Ltd. (Telenor Group)',
     duration: 'Sep 2016 – Dec 2016',
     details: [
-      'Acquired direct telecommunications engineering workflows, participating in systems monitoring and product integration reviews.',
-      'Assisted technical leads in preparing user guidelines and automated deployment checklist documentation.'
+      'Planning, Preparation, and Participation in Events and Programs.',
+      'Communicate with Clients.',
+      'Check Reports and Submit Documents to Supervisor.'
     ]
   }
 ];
