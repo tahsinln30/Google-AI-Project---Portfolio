@@ -5,9 +5,9 @@ import { Terminal, CheckCircle2, ShieldCheck, FileText, ArrowRight, Play, Briefc
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
-  const portfolioUrl = typeof window !== 'undefined' && (!window.location.origin || window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-    ? 'https://ais-pre-wjruqrjqlrqwsnibpbk5iq-619806767189.asia-southeast1.run.app'
-    : (typeof window !== 'undefined' ? window.location.origin : 'https://ais-pre-wjruqrjqlrqwsnibpbk5iq-619806767189.asia-southeast1.run.app');
+  const portfolioUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}${window.location.pathname}`.replace(/\/$/, '')
+    : '';
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(portfolioUrl);

@@ -21,14 +21,14 @@ export default function App() {
   useEffect(() => {
     const sections = [
       'about',
-      'analytics-dashboard',
       'experience',
+      'education',
       'skills',
       'projects',
-      'qa-playground',
       'publications',
-      'education',
       'honors',
+      'analytics-dashboard',
+      'qa-playground',
       'contact'
     ];
 
@@ -70,14 +70,14 @@ export default function App() {
       {/* Main Sections */}
       <main>
         <Hero />
-        <AnalyticsDashboard />
         <Experience />
+        <Education />
         <Skills />
         <Projects />
-        <QAPlayground />
         <Publications />
-        <Education />
         <Honors />
+        <AnalyticsDashboard />
+        <QAPlayground />
         <Contact />
       </main>
 

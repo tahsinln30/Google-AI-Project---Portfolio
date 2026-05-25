@@ -20,14 +20,14 @@ export default function Navbar({ activeSection, setActiveSection }: NavbarProps)
 
   const navItems = [
     { id: 'about', label: 'About', icon: Terminal },
-    { id: 'analytics-dashboard', label: 'Vitals & Analytics', icon: BarChart3 },
     { id: 'experience', label: 'Experience', icon: Briefcase },
+    { id: 'education', label: 'Education', icon: GraduationCap },
     { id: 'skills', label: 'Skills & Tools', icon: Bug },
     { id: 'projects', label: 'Projects', icon: FileText },
-    { id: 'qa-playground', label: 'QA Playground', icon: PlayActiveIcon },
     { id: 'publications', label: 'Publications', icon: BookOpen },
-    { id: 'education', label: 'Education', icon: GraduationCap },
     { id: 'honors', label: 'Honors & Awards', icon: Award },
+    { id: 'analytics-dashboard', label: 'Vitals & Analytics', icon: BarChart3 },
+    { id: 'qa-playground', label: 'QA Playground', icon: PlayActiveIcon },
   ];
 
   function PlayActiveIcon(props: any) {
