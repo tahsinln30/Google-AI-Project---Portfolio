@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { Mail, MapPin, Send, CheckCircle, Bug, Github, Linkedin } from 'lucide-react';
+import { Mail, MapPin, Send, CheckCircle, Bug, Github, Linkedin, Copy, Check } from 'lucide-react';
 import { personalInfo } from '../data';
 
 export default function Contact() {
@@ -11,6 +11,15 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
+  const [lastMailto, setLastMailto] = useState('');
+
+  const [copiedStates, setCopiedStates] = useState({
+    to: false,
+    cc: false,
+    subject: false,
+    body: false,
+  });
 
   // QA Sanity Checklist
   const [sanityChecks, setSanityChecks] = useState({
@@ -35,26 +44,50 @@ export default function Contact() {
     });
   };
 
+  const allChecksPass = sanityChecks.nameLength && sanityChecks.validEmail && sanityChecks.messageFilled;
+
+  const copyToClipboard = (text: string, key: 'to' | 'cc' | 'subject' | 'body') => {
+    navigator.clipboard.writeText(text);
+    setCopiedStates(prev => ({ ...prev, [key]: true }));
+    setTimeout(() => {
+      setCopiedStates(prev => ({ ...prev, [key]: false }));
+    }, 2000);
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     
-    // Ensure quality barrier is met before sending request
-    if (!sanityChecks.nameLength || !sanityChecks.validEmail || !sanityChecks.messageFilled) {
+    // If not validated, make errors visible and don't submit
+    if (!allChecksPass) {
+      setShowErrors(true);
       return;
     }
 
     setIsSubmitting(true);
+    setShowErrors(false);
+
+    const subject = formData.subject.trim() || 'Software Quality Inquiry';
+    const emailBody = `Hi Tahsin,\n\n${formData.message}\n\nSincerely,\n${formData.name}\nEmail: ${formData.email}`;
     
-    // Simulate API delivery block
+    // Set up standard mailtoUrl. CC the sender so they are guaranteed to receive a copy of this thread.
+    const mailtoUrl = `mailto:${personalInfo.email}?cc=${encodeURIComponent(formData.email)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+    
+    // Store the generated link for fallback
+    setLastMailto(mailtoUrl);
+
+    // Synchronously try opening the mail application to bypass async popup & security blocks!
+    try {
+      window.location.href = mailtoUrl;
+    } catch (err) {
+      console.warn("Mailto redirection issue:", err);
+    }
+
+    // Delay showing the success view slightly for better user pacing
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setSanityChecks({ nameLength: false, validEmail: false, messageFilled: false });
-    }, 1500);
+    }, 800);
   };
-
-  const allChecksPass = sanityChecks.nameLength && sanityChecks.validEmail && sanityChecks.messageFilled;
 
   return (
     <section id="contact" className="py-24 bg-slate-50 relative overflow-hidden text-slate-800">
@@ -118,13 +151,13 @@ export default function Contact() {
                 </div>
 
                 {/* SQA Verification statement */}
-                <div className="p-4 bg-blue-50/50 border border-blue-200/50 rounded-xl space-y-2">
-                  <div className="flex items-center space-x-2 text-xs text-blue-900 font-bold font-mono">
-                    <Bug className="w-4 h-4 text-blue-600" />
-                    <span>ENCRYPTED QA GATEWAY v1.0</span>
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                  <div className="flex items-center space-x-2 text-xs text-slate-900 font-bold font-sans">
+                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <span>Direct Mail Transmission</span>
                   </div>
                   <p className="text-[11px] text-slate-500 leading-relaxed">
-                    Message flows validation requires matching basic semantic tests (Name length, structured email patterns, and adequate message parameters) to bypass incoming spam filters automatically.
+                    Your messages are built dynamically and opened straight in your local e-mail dispatcher. This ensures secure, zero-tracked, and direct communication.
                   </p>
                 </div>
               </div>
@@ -158,35 +191,201 @@ export default function Contact() {
             <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-all text-left">
               
               {submitted ? (
-                <div className="py-12 text-center space-y-4">
+                <div className="py-8 text-center space-y-6">
                   <div className="w-16 h-16 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center justify-center text-emerald-600 mx-auto animate-bounce shadow-inner">
                     <CheckCircle className="w-8 h-8" />
                   </div>
-                  <div className="space-y-1.5 px-4">
-                    <h3 className="text-xl font-bold text-slate-900 font-sans">Message Validated & Sent!</h3>
-                    <p className="text-slate-500 text-sm max-w-sm mx-auto leading-relaxed">
-                      Thank you. Your feedback request has bypassed security checks, formatted into a direct lead, and submitted to Tahsin Ahmed.
+                  
+                  <div className="space-y-1.5 px-4 w-full">
+                    <h3 className="text-xl font-bold text-slate-900 font-sans">Message Prepared & Ready!</h3>
+                    <p className="text-slate-600 text-sm max-w-md mx-auto leading-relaxed">
+                      To ensure you get a duplicate of your message, please choose one of the reliable methods below to finalize sending.
                     </p>
                   </div>
 
-                  {/* SQA validation block response */}
-                  <div className="max-w-xs mx-auto p-4 bg-slate-950 rounded-xl border border-blue-900/10 text-left font-mono text-[10px] text-slate-300 space-y-1">
-                    <p className="text-blue-400 font-bold border-b border-slate-900 pb-1.5 mb-1.5">SANITY SYSTEM STATS</p>
-                    <p>STATUS: <span className="text-emerald-400 font-bold">202 ACCEPTED</span></p>
-                    <p>RECIPIENT: {personalInfo.email}</p>
-                    <p>VALIDATION CHECKS: Passed (3/3)</p>
-                    <p>THREAD ID: {Math.random().toString(36).substring(4, 12).toUpperCase()}</p>
+                  {/* Two-Column Options Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl mx-auto text-left pt-2 pb-1 px-1">
+                    {/* Column 1: Direct Link */}
+                    <div className="bg-blue-50/40 border border-blue-100 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-900 font-sans flex items-center space-x-2">
+                          <span className="w-2 h-2 bg-blue-500 rounded-full inline-block animate-ping"></span>
+                          <span>Option A: Auto-Draft (Recommended)</span>
+                        </h4>
+                        <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                          Opens your computer or phone's standard mail app (like Outlook, Mail, or Gmail) with all fields pre-filled. You are CC'ed automatically.
+                        </p>
+                      </div>
+                      
+                      {lastMailto && (
+                        <a
+                          href={lastMailto}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center space-x-1.5 w-full px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-blue-500/10 transition-all cursor-pointer text-center"
+                        >
+                          <Send className="w-3.5 h-3.5 text-white" />
+                          <span>Launch Mail Application</span>
+                        </a>
+                      )}
+                    </div>
+
+                    {/* Column 2: Explanation of Manual Copy */}
+                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-800 font-sans flex items-center space-x-2">
+                          <span className="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span>
+                          <span>Option B: Manual Send (100% Secure)</span>
+                        </h4>
+                        <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                          If clicking the button didn't open your client, or you use webmail (Gmail/Outlook on browsers), copy the draft parameters from our copy assistant tool.
+                        </p>
+                      </div>
+                      
+                      <div className="text-xs text-slate-500 font-semibold flex items-center space-x-1.5">
+                        <span className="inline-block bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded text-[10px]">Backup Mode</span>
+                        <span>Interactive draft below 👇</span>
+                      </div>
+                    </div>
                   </div>
 
-                  <button
-                    onClick={() => setSubmitted(false)}
-                    className="inline-flex items-center space-x-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all cursor-pointer"
-                  >
-                    <span>Submit another thread</span>
-                  </button>
+                  {/* Manual Copy Interactive Box */}
+                  <div className="max-w-2xl mx-auto border border-slate-200 rounded-2xl overflow-hidden bg-white text-left shadow-sm">
+                    <div className="bg-slate-50 px-4 py-3 border-b border-slate-200 flex justify-between items-center">
+                      <span className="text-xs font-bold text-slate-700 tracking-wide uppercase">Email Draft Assistant</span>
+                      <span className="text-[10px] text-slate-400 font-medium bg-white px-2 py-0.5 rounded border border-slate-200">Copy-Paste Toolkit</span>
+                    </div>
+
+                    <div className="p-4 space-y-3 text-xs">
+                      {/* Recipient To */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-2.5 gap-2">
+                        <div className="space-y-0.5">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans">Send To (Primary)</span>
+                          <span className="text-slate-800 font-medium font-mono select-all break-all">{personalInfo.email}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(personalInfo.email, 'to')}
+                          className="self-start sm:self-center inline-flex items-center space-x-1 px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-medium transition-colors cursor-pointer"
+                        >
+                          {copiedStates.to ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-600 animate-scale" />
+                              <span className="text-[10px] text-emerald-600">Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" />
+                              <span className="text-[10px]">Copy</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Carbon Copy */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-2.5 gap-2">
+                        <div className="space-y-0.5">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans">Your Copy (CC)</span>
+                          <span className="text-slate-800 font-medium font-mono select-all break-all">
+                            {formData.email || 'cooper@company.com'}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(formData.email, 'cc')}
+                          className="self-start sm:self-center inline-flex items-center space-x-1 px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-medium transition-colors cursor-pointer"
+                        >
+                          {copiedStates.cc ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-600 animate-scale" />
+                              <span className="text-[10px] text-emerald-600">Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" />
+                              <span className="text-[10px]">Copy</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Subject */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-2.5 gap-2">
+                        <div className="space-y-0.5 w-full max-w-md">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans">Subject Title</span>
+                          <span className="text-slate-800 font-medium block truncate select-all">
+                            {formData.subject.trim() || 'Software Quality Inquiry'}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(formData.subject.trim() || 'Software Quality Inquiry', 'subject')}
+                          className="self-start sm:self-center inline-flex items-center space-x-1 px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-medium transition-colors cursor-pointer"
+                        >
+                          {copiedStates.subject ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-600 animate-scale" />
+                              <span className="text-[10px] text-emerald-600">Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" />
+                              <span className="text-[10px]">Copy</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Message Body */}
+                      <div className="space-y-1.5 pt-1">
+                        <div className="flex justify-between items-center text-left">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">Email Message Body</span>
+                          <button
+                            type="button"
+                            onClick={() => copyToClipboard(`Hi Tahsin,\n\n${formData.message}\n\nSincerely,\n${formData.name}\nEmail: ${formData.email}`, 'body')}
+                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-medium transition-colors cursor-pointer"
+                          >
+                            {copiedStates.body ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-600 animate-scale" />
+                                <span className="text-[10px] text-emerald-600">Copied Entire Body!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5" />
+                                <span className="text-[10px]">Copy Full Message</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        <div className="bg-slate-50 p-3 rounded-lg border border-slate-150 font-mono text-[11px] text-slate-700 whitespace-pre-wrap max-h-32 overflow-y-auto leading-relaxed select-all">
+                          {`Hi Tahsin,\n\n${formData.message}\n\nSincerely,\n${formData.name}\nEmail: ${formData.email}`}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 flex justify-center">
+                    <button
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFormData({ name: '', email: '', subject: '', message: '' });
+                        setSanityChecks({ nameLength: false, validEmail: false, messageFilled: false });
+                      }}
+                      className="inline-flex items-center space-x-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all cursor-pointer"
+                    >
+                      <span>Send Another Inquiry</span>
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  {showErrors && !allChecksPass && (
+                    <div className="p-3.5 bg-rose-50 border border-rose-100 text-rose-700 rounded-xl text-xs font-semibold leading-relaxed">
+                      ⚠️ Please make sure to fill out all the fields correctly. Brand names and text inputs must be valid, and your message should contain at least 10 characters.
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
                       <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block font-sans">Full Name</label>
@@ -197,76 +396,62 @@ export default function Contact() {
                         onChange={handleInputChange}
                         required
                         placeholder="e.g., Jane Cooper"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all shadow-sm"
+                        className={`w-full bg-slate-50 border rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all shadow-sm ${showErrors && !sanityChecks.nameLength ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-50/20' : 'border-slate-200'}`}
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block font-sans">Corporate Mail</label>
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block font-sans">Email Address</label>
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        placeholder="e.g., coorper@company.com"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all shadow-sm"
+                        placeholder="e.g., cooper@company.com"
+                        className={`w-full bg-slate-50 border rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all shadow-sm ${showErrors && !sanityChecks.validEmail ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-50/20' : 'border-slate-200'}`}
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1 text-left">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block font-sans">Subject Topic</label>
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block font-sans">Subject</label>
                     <input
                       type="text"
                       name="subject"
                       value={formData.subject}
                       onChange={handleInputChange}
-                      placeholder="e.g., Contract automation suite, hiring position, etc."
+                      placeholder="e.g., Inquiry regarding professional services, contract placements, etc."
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all shadow-sm"
                     />
                   </div>
 
                   <div className="space-y-1 text-left">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block font-sans">Brief Message Parameters</label>
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block font-sans">Your Message</label>
                     <textarea
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
                       required
                       rows={4}
-                      placeholder="Write your email body or contract instructions here... (At least 10 chars)"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3  py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all shadow-sm min-h-[96px]"
+                      placeholder="Type your message here... (min. 10 characters)"
+                      className={`w-full bg-slate-50 border rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all shadow-sm min-h-[96px] ${showErrors && !sanityChecks.messageFilled ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-50/20' : 'border-slate-200'}`}
                     />
-                  </div>
-
-                  {/* SQA Sanity requirements bar */}
-                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap gap-x-4 gap-y-1 items-center justify-start text-[11px] font-mono text-slate-500">
-                    <span className="font-bold text-slate-600">Form Sanity:</span>
-                    <span className={sanityChecks.nameLength ? 'text-emerald-600 font-bold' : 'text-slate-400'}>
-                      [Name: {sanityChecks.nameLength ? 'OK' : 'PENDING'}]
-                    </span>
-                    <span className={sanityChecks.validEmail ? 'text-emerald-600 font-bold' : 'text-slate-400'}>
-                      [Email: {sanityChecks.validEmail ? 'OK' : 'PENDING'}]
-                    </span>
-                    <span className={sanityChecks.messageFilled ? 'text-emerald-600 font-bold' : 'text-slate-400'}>
-                      [Body Size: {sanityChecks.messageFilled ? 'OK' : 'PENDING'}]
-                    </span>
                   </div>
 
                   <button
                     type="submit"
-                    disabled={isSubmitting || !allChecksPass}
+                    disabled={isSubmitting}
                     className="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-200 disabled:text-slate-400 text-white font-sans text-xs font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-blue-600/10 active:scale-95 transition-all outline-none cursor-pointer"
                   >
                     {isSubmitting ? (
                       <>
-                        <Bug className="w-4 h-4 animate-spin text-inherit" />
-                        <span>Validating and Dispatching...</span>
+                        <div className="w-4 h-4 rounded-full border-2 border-slate-300 border-t-white animate-spin shrink-0" />
+                        <span>Dispatching Message...</span>
                       </>
                     ) : (
                       <>
                         <Send className="w-3.5 h-3.5 text-white" />
-                        <span>Dispatch Message Thread</span>
+                        <span>Send Message</span>
                       </>
                     )}
                   </button>
